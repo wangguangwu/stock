@@ -6,6 +6,8 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import com.alibaba.fastjson2.JSON;
+import com.wangguangwu.datatushare.constant.QueryFieldsConstant;
+import com.wangguangwu.datatushare.constant.UrlConstant;
 import com.wangguangwu.datatushare.dto.ApiResponse;
 import com.wangguangwu.datatushare.dto.StockInfo;
 import com.wangguangwu.datatushare.entity.StockBasicInfoDO;
@@ -32,9 +34,7 @@ import java.util.List;
 @Slf4j
 public class StockServiceImpl implements StockService {
 
-    private static final String URL = "http://api.tushare.pro";
     private static final String TOKEN = "7c0b962c215058d6fcf4085f586a0e789827e9b131326f0e4deef9a2";
-    private static final List<String> FIELDS = Arrays.asList("ts_code", "name", "area", "market", "industry", "list_date");
 
     @Resource
     private StockBasicInfoService stockBasicInfoService;
@@ -66,6 +66,7 @@ public class StockServiceImpl implements StockService {
             stockBasicInfoDO.setListDate(LocalDate.parse(stockInfo.getListDate(), formatter));
             return stockBasicInfoDO;
         }).toList();
+        // TODO: 需要根据代码进行更新
         stockBasicInfoService.saveOrUpdateBatch(stockBasicInfoDOList);
         stopWatch.stop();
     }
@@ -73,7 +74,7 @@ public class StockServiceImpl implements StockService {
 
     private String sendStockBasicRequest() {
         JSONObject jsonBody = createRequestBody();
-        HttpResponse httpResponse = HttpRequest.post(URL)
+        HttpResponse httpResponse = HttpRequest.post(UrlConstant.PRO_URL)
                 .body(jsonBody.toStringPretty())
                 .execute();
 
@@ -92,7 +93,7 @@ public class StockServiceImpl implements StockService {
         JSONObject params = new JSONObject();
         params.set("list_status", "L");
         jsonBody.set("params", params);
-        jsonBody.set("fields", FIELDS);
+        jsonBody.set("fields", QueryFieldsConstant.STOCK_BASIC_FIELDS);
         return jsonBody;
     }
 
