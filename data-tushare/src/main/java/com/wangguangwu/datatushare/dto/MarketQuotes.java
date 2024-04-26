@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MarketData {
+public class MarketQuotes {
 
     /**
      * 股票代码

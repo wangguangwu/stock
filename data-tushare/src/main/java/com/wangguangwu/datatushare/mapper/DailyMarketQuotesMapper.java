@@ -1,6 +1,6 @@
 package com.wangguangwu.datatushare.mapper;
 
-import com.wangguangwu.datatushare.entity.DailyMarketDataDO;
+import com.wangguangwu.datatushare.entity.DailyMarketQuotesDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author wangguangwu
  * @since 2024-04-26
  */
-public interface DailyMarketDataMapper extends BaseMapper<DailyMarketDataDO> {
+public interface DailyMarketQuotesMapper extends BaseMapper<DailyMarketQuotesDO> {
 
 }

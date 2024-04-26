@@ -5,11 +5,16 @@ package com.wangguangwu.datatushare.service.quotes;
  *
  * @author wangguangwu
  */
-public interface MarketDataService {
+public interface MarketQuotesService {
 
     /**
      * 日线行情数据
      */
-    void dailyMarketService();
+    void dailyMarketQuotes();
+
+    /**
+     * 周线行情
+     */
+    void weeklyMarketQuotes();
 
 }

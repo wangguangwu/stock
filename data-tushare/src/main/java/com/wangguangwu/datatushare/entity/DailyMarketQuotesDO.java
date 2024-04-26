@@ -23,8 +23,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@TableName("daily_market_data")
-public class DailyMarketDataDO implements Serializable {
+@TableName("daily_market_quotes")
+public class DailyMarketQuotesDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -1,11 +1,11 @@
-package com.wangguangwu.datatushare.component;
+package com.wangguangwu.datatushare.component.stock;
 
 import cn.hutool.json.JSONObject;
+import com.wangguangwu.datatushare.component.TuShareDataComponent;
 import com.wangguangwu.datatushare.constant.QueryFieldsConstant;
 import com.wangguangwu.datatushare.dto.StockInfo;
 import com.wangguangwu.datatushare.entity.StockBasicInfoDO;
 import com.wangguangwu.datatushare.service.basic.StockBasicInfoService;
-import com.wangguangwu.datatushare.template.TuShareDataHandleComponent;
 import com.wangguangwu.datatushare.util.ConvertUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Component
 @Slf4j
-public class StockBasicHandleComponent extends TuShareDataHandleComponent<StockBasicInfoDO> {
+public class StockBasicComponent extends TuShareDataComponent<StockBasicInfoDO> {
 
     @Resource
     private StockBasicInfoService stockBasicInfoService;

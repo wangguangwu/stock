@@ -1,4 +1,4 @@
-package com.wangguangwu.datatushare.template;
+package com.wangguangwu.datatushare.component;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.http.HttpRequest;
@@ -26,7 +26,7 @@ import static com.wangguangwu.datatushare.constant.TokenConstant.TOKEN;
  */
 @Component
 @Slf4j
-public abstract class TuShareDataHandleComponent<T> {
+public abstract class TuShareDataComponent<T> {
 
     /**
      * 获取请求参数

@@ -1,4 +1,4 @@
-package com.wangguangwu.datatushare.service;
+package com.wangguangwu.datatushare.service.stock;
 
 /**
  * @author wangguangwu
