@@ -17,4 +17,9 @@ public interface MarketQuotesService {
      */
     void weeklyMarketQuotes();
 
+    /**
+     * 每日指标
+     */
+    void dailyBasic();
+
 }

@@ -5,7 +5,6 @@ import com.wangguangwu.datatushare.component.TuShareDataComponent;
 import com.wangguangwu.datatushare.constant.QueryFieldsConstant;
 import com.wangguangwu.datatushare.dto.MarketQuotes;
 import com.wangguangwu.datatushare.entity.WeeklyMarketQuotesDO;
-import com.wangguangwu.datatushare.entity.WeeklyMarketQuotesDO;
 import com.wangguangwu.datatushare.service.basic.WeeklyMarketQuotesService;
 import com.wangguangwu.datatushare.util.ConvertUtil;
 import jakarta.annotation.Resource;

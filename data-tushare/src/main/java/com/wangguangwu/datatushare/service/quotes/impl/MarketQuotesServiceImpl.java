@@ -1,5 +1,6 @@
 package com.wangguangwu.datatushare.service.quotes.impl;
 
+import com.wangguangwu.datatushare.component.quotes.DailyBasicComponent;
 import com.wangguangwu.datatushare.component.quotes.DailyMarketQuotesComponent;
 import com.wangguangwu.datatushare.component.quotes.WeeklyMarketQuotesComponent;
 import com.wangguangwu.datatushare.service.quotes.MarketQuotesService;
@@ -20,6 +21,9 @@ public class MarketQuotesServiceImpl implements MarketQuotesService {
     @Resource
     private WeeklyMarketQuotesComponent weeklyMarketQuotesComponent;
 
+    @Resource
+    private DailyBasicComponent dailyBasicComponent;
+
     @Override
     public void dailyMarketQuotes() {
         dailyMarketQuotesComponent.fetchAndSaveData("A股每日行情");
@@ -28,5 +32,10 @@ public class MarketQuotesServiceImpl implements MarketQuotesService {
     @Override
     public void weeklyMarketQuotes() {
         weeklyMarketQuotesComponent.fetchAndSaveData("A股每周行情");
+    }
+
+    @Override
+    public void dailyBasic() {
+        dailyBasicComponent.fetchAndSaveData("A股每日指标");
     }
 }

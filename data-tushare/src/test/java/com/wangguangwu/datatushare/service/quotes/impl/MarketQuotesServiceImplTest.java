@@ -20,4 +20,9 @@ class MarketQuotesServiceImplTest {
     void weeklyMarketQuotes() {
         marketDataService.weeklyMarketQuotes();
     }
+
+    @Test
+    void dailyBasic() {
+        marketDataService.dailyBasic();
+    }
 }

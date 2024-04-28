@@ -21,6 +21,27 @@ public final class QueryFieldsConstant {
             "vol",
             "amount");
 
+    public static final List<String> DAILY_INDICATORS_FIELDS = Arrays.asList(
+            "ts_code",
+            "trade_date",
+            "close",
+            "turnover_rate",
+            "turnover_rate_f",
+            "volume_ratio",
+            "pe",
+            "pe_ttm",
+            "pb",
+            "ps",
+            "ps_ttm",
+            "dv_ratio",
+            "dv_ttm",
+            "total_share",
+            "float_share",
+            "free_share",
+            "total_mv",
+            "circ_mv"
+    );
+
     private QueryFieldsConstant() {
     }
 }
