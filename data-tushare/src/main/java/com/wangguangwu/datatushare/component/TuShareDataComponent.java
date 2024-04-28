@@ -1,12 +1,12 @@
 package com.wangguangwu.datatushare.component;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import com.alibaba.fastjson2.JSON;
 import com.wangguangwu.datatushare.constant.UrlConstant;
-import com.wangguangwu.datatushare.dto.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
@@ -14,7 +14,7 @@ import org.springframework.util.StopWatch;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import static com.wangguangwu.datatushare.constant.TokenConstant.TOKEN;
@@ -47,10 +47,10 @@ public abstract class TuShareDataComponent<T> {
     /**
      * 解析 tushare 响应中的 item
      *
-     * @param item 实际响应数据
+     * @param json 响应报文
      * @return T 泛型
      */
-    protected abstract T convertItemToDataObject(List<String> item);
+    protected abstract List<T> convertItemToDataObject(String json);
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
@@ -69,7 +69,7 @@ public abstract class TuShareDataComponent<T> {
         }
 
         stopWatch.start("解析数据");
-        List<T> dataList = parseData(responseBody);
+        List<T> dataList = convertItemToDataObject(responseBody);
         stopWatch.stop();
 
         if (CollUtil.isEmpty(dataList)) {
@@ -96,20 +96,29 @@ public abstract class TuShareDataComponent<T> {
         }
     }
 
-    private List<T> parseData(String body) {
-        ApiResponse response = JSON.parseObject(body, ApiResponse.class);
-        List<List<String>> items = response.getData().getItems();
-        if (CollUtil.isEmpty(items)) {
-            return Collections.emptyList();
-        }
-        return items.stream().map(this::convertItemToDataObject).toList();
-    }
-
     protected LocalDate parseDate(String dateStr) {
-        return LocalDate.parse(dateStr, formatter);
+        if (CharSequenceUtil.isNotBlank(dateStr)) {
+            try {
+                return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyyMMdd"));
+            } catch (DateTimeParseException e) {
+                // 可以记录错误或进行其他错误处理
+                log.error("Invalid date format: {}", dateStr);
+                return null;
+            }
+        }
+        return null;
     }
 
     protected BigDecimal parseBigDecimal(String value) {
-        return new BigDecimal(value);
+        if (CharSequenceUtil.isNotBlank(value)) {
+            try {
+                return new BigDecimal(value);
+            } catch (NumberFormatException e) {
+                // 可以记录日志或进行其他错误处理
+                log.error("Invalid input for BigDecimal conversion: {}", value);
+                return null;
+            }
+        }
+        return null;
     }
 }

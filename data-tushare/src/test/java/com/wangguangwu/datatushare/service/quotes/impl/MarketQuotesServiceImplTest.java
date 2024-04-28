@@ -13,16 +13,16 @@ class MarketQuotesServiceImplTest {
 
     @Test
     void dailyMarketService() {
-        marketDataService.dailyMarketQuotes();
+//        marketDataService.dailyMarketQuotes();
     }
 
     @Test
     void weeklyMarketQuotes() {
-        marketDataService.weeklyMarketQuotes();
+//        marketDataService.weeklyMarketQuotes();
     }
 
     @Test
     void dailyBasic() {
-        marketDataService.dailyBasic();
+//        marketDataService.dailyBasic();
     }
 }

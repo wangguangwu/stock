@@ -39,11 +39,12 @@ public class StockBasicComponent extends TuShareDataComponent<StockBasicInfoDO> 
     }
 
     @Override
-    protected StockBasicInfoDO convertItemToDataObject(List<String> item) {
-        StockInfo stockInfo = new StockInfo(
-                item.get(0), item.get(1), item.get(2), item.get(3), item.get(4), item.get(5)
-        );
+    protected List<StockBasicInfoDO> convertItemToDataObject(String json) {
+        List<StockInfo> stockInfoList = ConvertUtil.convertJsonToObjects(json, StockInfo.class);
+        return stockInfoList.stream().map(this::getStockBasicInfoDO).toList();
+    }
 
+    private StockBasicInfoDO getStockBasicInfoDO(StockInfo stockInfo) {
         StockBasicInfoDO stockBasicInfoDO = ConvertUtil.convertSourceToTarget(stockInfo, StockBasicInfoDO.class);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");

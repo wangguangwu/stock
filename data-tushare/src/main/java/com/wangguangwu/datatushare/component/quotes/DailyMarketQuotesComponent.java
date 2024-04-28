@@ -38,11 +38,12 @@ public class DailyMarketQuotesComponent extends TuShareDataComponent<DailyMarket
     }
 
     @Override
-    protected DailyMarketQuotesDO convertItemToDataObject(List<String> item) {
-        MarketQuotes marketQuotes = new MarketQuotes(
-                item.get(0), item.get(1), item.get(2), item.get(3), item.get(4), item.get(5),
-                item.get(6), item.get(7), item.get(8), item.get(9), item.get(10)
-        );
+    protected List<DailyMarketQuotesDO> convertItemToDataObject(String json) {
+        List<MarketQuotes> marketQuotes = ConvertUtil.convertJsonToObjects(json, MarketQuotes.class);
+        return marketQuotes.stream().map(this::getDailyMarketQuotesDO).toList();
+    }
+
+    private DailyMarketQuotesDO getDailyMarketQuotesDO(MarketQuotes marketQuotes) {
         DailyMarketQuotesDO dailyMarketQuotesDO = ConvertUtil.convertSourceToTarget(marketQuotes, DailyMarketQuotesDO.class);
         dailyMarketQuotesDO.setOpen(parseBigDecimal(marketQuotes.getOpen()));
         dailyMarketQuotesDO.setHigh(parseBigDecimal(marketQuotes.getHigh()));

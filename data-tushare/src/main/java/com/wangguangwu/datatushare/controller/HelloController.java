@@ -1,6 +1,6 @@
 package com.wangguangwu.datatushare.controller;
 
-import com.wangguangwu.datatushare.service.stock.StockService;
+import com.wangguangwu.datatushare.service.hello.HelloService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
 
     @Resource
-    private StockService stockService;
+    private HelloService helloService;
 
     @GetMapping("/hello")
     public void hello() {
-        stockService.stockBasicItem();
+        helloService.hello();
     }
 
 }

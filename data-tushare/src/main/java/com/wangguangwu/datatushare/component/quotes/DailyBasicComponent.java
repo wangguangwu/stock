@@ -37,14 +37,7 @@ public class DailyBasicComponent extends TuShareDataComponent<DailyIndicatorsDO>
         dailyIndicatorsService.saveOrUpdateBatch(list);
     }
 
-    @Override
-    protected DailyIndicatorsDO convertItemToDataObject(List<String> item) {
-        DailyIndicators dailyIndicators = new DailyIndicators(
-                item.get(0), item.get(1), item.get(2), item.get(3), item.get(4), item.get(5),
-                item.get(6), item.get(7), item.get(8), item.get(9), item.get(10), item.get(11),
-                item.get(12), item.get(13), item.get(14), item.get(15), item.get(16), item.get(17)
-        );
-
+    private DailyIndicatorsDO getDailyIndicatorsDO(DailyIndicators dailyIndicators) {
         DailyIndicatorsDO dailyIndicatorsDO = ConvertUtil.convertSourceToTarget(dailyIndicators, DailyIndicatorsDO.class);
         dailyIndicatorsDO.setTradeDate(parseDate(dailyIndicators.getTradeDate()));
         dailyIndicatorsDO.setClose(parseBigDecimal(dailyIndicators.getClose()));
@@ -65,5 +58,11 @@ public class DailyBasicComponent extends TuShareDataComponent<DailyIndicatorsDO>
         dailyIndicatorsDO.setCircMv(parseBigDecimal(dailyIndicators.getCircMv()));
 
         return dailyIndicatorsDO;
+    }
+
+    @Override
+    protected List<DailyIndicatorsDO> convertItemToDataObject(String json) {
+        List<DailyIndicators> dailyIndicatorsList = ConvertUtil.convertJsonToObjects(json, DailyIndicators.class);
+        return dailyIndicatorsList.stream().map(this::getDailyIndicatorsDO).toList();
     }
 }
