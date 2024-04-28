@@ -24,15 +24,6 @@ public class DailyMarketQuotesComponent extends TuShareDataComponent<DailyMarket
     private DailyMarketQuotesService dailyMarketQuotesService;
 
     @Override
-    protected JSONObject getParams() {
-        JSONObject params = new JSONObject();
-        params.set("ts_code", "000001.SZ");
-        params.set("start_date", "20180701");
-        params.set("end_date", "20180718");
-        return params;
-    }
-
-    @Override
     protected JSONObject createBasicRequestBody() {
         JSONObject jsonBody = new JSONObject();
         jsonBody.set("api_name", "daily");

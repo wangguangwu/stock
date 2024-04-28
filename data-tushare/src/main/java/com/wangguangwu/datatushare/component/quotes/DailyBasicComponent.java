@@ -24,15 +24,6 @@ public class DailyBasicComponent extends TuShareDataComponent<DailyIndicatorsDO>
     private DailyIndicatorsService dailyIndicatorsService;
 
     @Override
-    protected JSONObject getParams() {
-        JSONObject params = new JSONObject();
-        params.set("ts_code", "000001.SZ");
-        params.set("start_date", "20240426");
-        params.set("end_date", "20240426");
-        return params;
-    }
-
-    @Override
     protected JSONObject createBasicRequestBody() {
         JSONObject jsonBody = new JSONObject();
         jsonBody.set("api_name", "daily_basic");

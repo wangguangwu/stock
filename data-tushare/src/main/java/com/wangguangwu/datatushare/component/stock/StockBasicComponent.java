@@ -26,13 +26,6 @@ public class StockBasicComponent extends TuShareDataComponent<StockBasicInfoDO> 
     private StockBasicInfoService stockBasicInfoService;
 
     @Override
-    protected JSONObject getParams() {
-        JSONObject params = new JSONObject();
-        params.set("list_status", "L");
-        return params;
-    }
-
-    @Override
     protected JSONObject createBasicRequestBody() {
         JSONObject jsonBody = new JSONObject();
         jsonBody.set("api_name", "stock_basic");

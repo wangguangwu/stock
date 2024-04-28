@@ -1,5 +1,6 @@
 package com.wangguangwu.datatushare.service.stock.impl;
 
+import cn.hutool.json.JSONObject;
 import com.wangguangwu.datatushare.component.stock.StockBasicComponent;
 import com.wangguangwu.datatushare.service.stock.StockService;
 import jakarta.annotation.Resource;
@@ -19,6 +20,9 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public void stockBasicItem() {
+        JSONObject params = new JSONObject();
+        params.set("list_status", "L");
+        stockBasicHandleComponent.setParams(params);
         stockBasicHandleComponent.fetchAndSaveData("股市基本数据");
     }
 }

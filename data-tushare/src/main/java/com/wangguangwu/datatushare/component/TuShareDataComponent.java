@@ -28,12 +28,7 @@ import static com.wangguangwu.datatushare.constant.TokenConstant.TOKEN;
 @Slf4j
 public abstract class TuShareDataComponent<T> {
 
-    /**
-     * 获取请求参数
-     *
-     * @return 请求参数
-     */
-    protected abstract JSONObject getParams();
+    protected JSONObject params;
 
     /**
      * 构建请求体
@@ -58,6 +53,10 @@ public abstract class TuShareDataComponent<T> {
     protected abstract T convertItemToDataObject(List<String> item);
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+    public void setParams(JSONObject params) {
+        this.params = params;
+    }
 
     public final void fetchAndSaveData(String operation) {
         StopWatch stopWatch = new StopWatch();
@@ -84,7 +83,6 @@ public abstract class TuShareDataComponent<T> {
     }
 
     private String sendRequest() {
-        JSONObject params = getParams();
         JSONObject jsonBody = createBasicRequestBody();
         jsonBody.set("params", params);
         jsonBody.set("token", TOKEN);
