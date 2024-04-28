@@ -1,6 +1,7 @@
 package com.wangguangwu.datatushare.service.quotes.impl;
 
 import com.wangguangwu.datatushare.service.quotes.MarketQuotesService;
+import com.wangguangwu.datatushare.util.DateFormatUtil;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,5 +25,10 @@ class MarketQuotesServiceImplTest {
     @Test
     void dailyBasic() {
 //        marketDataService.dailyBasic();
+    }
+
+    @Test
+    void bakDaily() {
+        marketDataService.bakDaily("601318.SH", DateFormatUtil.formatYYYYMMDD(), DateFormatUtil.formatYYYYMMDD(), "", "", "");
     }
 }

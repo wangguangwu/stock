@@ -1,6 +1,7 @@
 package com.wangguangwu.datatushare.service.quotes.impl;
 
 import cn.hutool.json.JSONObject;
+import com.wangguangwu.datatushare.component.quotes.BakDailyComponent;
 import com.wangguangwu.datatushare.component.quotes.DailyBasicComponent;
 import com.wangguangwu.datatushare.component.quotes.DailyMarketQuotesComponent;
 import com.wangguangwu.datatushare.component.quotes.WeeklyMarketQuotesComponent;
@@ -18,12 +19,12 @@ public class MarketQuotesServiceImpl implements MarketQuotesService {
 
     @Resource
     private DailyMarketQuotesComponent dailyMarketQuotesComponent;
-
     @Resource
     private WeeklyMarketQuotesComponent weeklyMarketQuotesComponent;
-
     @Resource
     private DailyBasicComponent dailyBasicComponent;
+    @Resource
+    private BakDailyComponent bakDailyComponent;
 
     @Override
     public void dailyMarketQuotes(String tsCode, String startDate, String endDate) {
@@ -42,6 +43,12 @@ public class MarketQuotesServiceImpl implements MarketQuotesService {
     public void dailyBasic(String tsCode, String startDate, String endDate) {
         dailyBasicComponent.setParams(getParams(tsCode, startDate, endDate));
         dailyBasicComponent.fetchAndSaveData("A股每日指标");
+    }
+
+    @Override
+    public void bakDaily(String tsCode, String tradeDate, String startDate, String endDate, String offset, String limit) {
+        bakDailyComponent.setParams(getParams(tsCode, startDate, endDate));
+        bakDailyComponent.fetchAndSaveData("A股备用行情");
     }
 
     private static JSONObject getParams(String tsCode, String startDate, String endDate) {

@@ -42,6 +42,40 @@ public final class QueryFieldsConstant {
             "circ_mv"
     );
 
+    public static final List<String> BAK_DAILY_FIELDS = Arrays.asList(
+            "ts_code",
+            "trade_date",
+            "name",
+            "pct_change",
+            "close",
+            "change",
+            "open",
+            "high",
+            "low",
+            "pre_close",
+            "vol_ratio",
+            "turn_over",
+            "swing",
+            "vol",
+            "amount",
+            "selling",
+            "buying",
+            "total_share",
+            "float_share",
+            "pe",
+            "industry",
+            "area",
+            "float_mv",
+            "total_mv",
+            "avg_price",
+            "strength",
+            "activity",
+            "avg_turnover",
+            "attack",
+            "interval_3",
+            "interval_6"
+    );
+
     private QueryFieldsConstant() {
     }
 }

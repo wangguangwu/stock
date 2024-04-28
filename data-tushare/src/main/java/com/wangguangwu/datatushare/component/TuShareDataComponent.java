@@ -52,8 +52,6 @@ public abstract class TuShareDataComponent<T> {
      */
     protected abstract List<T> convertItemToDataObject(String json);
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-
     public void setParams(JSONObject params) {
         this.params = params;
     }

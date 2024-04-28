@@ -1,5 +1,6 @@
 package com.wangguangwu.datatushare.util;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -9,6 +10,10 @@ import org.springframework.beans.BeanUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,5 +96,80 @@ public final class ConvertUtil {
             camelCaseString.append(parts[i].substring(0, 1).toUpperCase()).append(parts[i].substring(1).toLowerCase());
         }
         return camelCaseString.toString();
+    }
+
+    @SuppressWarnings("all")
+    public static <S, T> T convertWithTypeTransfer(S source, Class<T> targetClass) {
+        T targetObject = null;
+        try {
+            targetObject = targetClass.getDeclaredConstructor().newInstance();
+            copyFields(source, targetObject, targetClass);
+        } catch (Exception e) {
+            log.error("调用 convertWithTypeTransfer 方法异常: {}", e.getMessage(), e);
+        }
+        return targetObject;
+    }
+
+    private static <S, T> void copyFields(S source, T targetObject, Class<T> targetClass) throws IllegalAccessException {
+        Field[] targetFields = targetClass.getDeclaredFields();
+        Field[] sourceFields = source.getClass().getDeclaredFields();
+        for (Field targetField : targetFields) {
+            copyField(source, targetObject, sourceFields, targetField);
+        }
+    }
+
+    private static <S, T> void copyField(S source, T targetObject, Field[] sourceFields, Field targetField) throws IllegalAccessException {
+        targetField.setAccessible(true);
+        Field sourceField = findField(sourceFields, targetField.getName());
+        if (sourceField != null) {
+            sourceField.setAccessible(true);
+            assignField(source, targetObject, sourceField, targetField);
+        }
+    }
+
+    private static <S, T> void assignField(S source, T targetObject, Field sourceField, Field targetField) throws IllegalAccessException {
+        String value = (String) sourceField.get(source);
+        if (value != null) {
+            switch (targetField.getType().getName()) {
+                case "java.math.BigDecimal" -> targetField.set(targetObject, parseBigDecimal(value));
+                case "java.time.LocalDate" -> targetField.set(targetObject, parseDate(value));
+                default -> targetField.set(targetObject, value);
+            }
+        }
+    }
+
+    private static Field findField(Field[] fields, String name) {
+        for (Field field : fields) {
+            if (field.getName().equals(name)) {
+                return field;
+            }
+        }
+        return null;
+    }
+
+    private static LocalDate parseDate(String dateStr) {
+        if (CharSequenceUtil.isNotBlank(dateStr)) {
+            try {
+                return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyyMMdd"));
+            } catch (DateTimeParseException e) {
+                // 可以记录错误或进行其他错误处理
+                log.error("Invalid date format: {}", dateStr);
+                return null;
+            }
+        }
+        return null;
+    }
+
+    private static BigDecimal parseBigDecimal(String value) {
+        if (CharSequenceUtil.isNotBlank(value)) {
+            try {
+                return new BigDecimal(value);
+            } catch (NumberFormatException e) {
+                // 可以记录日志或进行其他错误处理
+                log.error("Invalid input for BigDecimal conversion: {}", value);
+                return null;
+            }
+        }
+        return null;
     }
 }
