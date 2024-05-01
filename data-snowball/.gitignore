@@ -1,0 +1,72 @@
+# Bytecode compiled files
+*.class
+
+# Maven folder
+/target/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Logs and databases #
+*.log
+*.sql
+*.sqlite
+
+# OS generated files #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Eclipse specific #
+.metadata
+.bin/
+.tmp/
+*.tmp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
+# IntelliJ IDEA specific #
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Visual Studio Code specific #
+.vscode/
+
+# Text editor temporary files
+*~
+*.swp
+*.sublime-workspace
+
+# Node package directories (if using Node.js or TypeScript)
+/node_modules/
+
+# Environment files
+.env
+
+# Ignore Gradle project-specific cache directory
+.gradle/
+
+# Ignore Gradle build output directory
+/build/
+
+# Java specific ignore
+hs_err_pid*
+
+# General backup files
+*.bak
