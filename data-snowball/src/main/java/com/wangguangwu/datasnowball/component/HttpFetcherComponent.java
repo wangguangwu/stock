@@ -81,7 +81,7 @@ public class HttpFetcherComponent {
      * @param url 请求的URL
      * @return 响应内容
      */
-    public String fetchWithToken(String url) {
+    public String fetch(String url) {
         Map<String, String> headers = getDefaultHeaders();
         return fetch(url, headers);
     }
