@@ -23,15 +23,14 @@ public final class CapitalUrlConstant {
     public static final String CAPITAL_ASSORT_URL = "https://stock.xueqiu.com/v5/stock/capital/assort.json?symbol=";
 
     /**
-     * 获取资本历史数据。
-     */
-    public static final String CAPITAL_HISTORY_URL = "https://stock.xueqiu.com/v5/stock/capital/history.json?symbol=";
-
-    /**
      * 获取资本流向数据。
      */
     public static final String CAPITAL_FLOW_URL = "https://stock.xueqiu.com/v5/stock/capital/flow.json?symbol=";
 
+    /**
+     * 获取资本历史数据。
+     */
+    public static final String CAPITAL_HISTORY_URL = "https://stock.xueqiu.com/v5/stock/capital/history.json?symbol=";
 
     private CapitalUrlConstant() {
     }

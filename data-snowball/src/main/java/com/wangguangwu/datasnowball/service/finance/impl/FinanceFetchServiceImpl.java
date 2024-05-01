@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class FinanceFetchServiceImpl implements FinanceFetchService {
 
+    private static final int DEFAULT_COUNT = 10;
+
     @Resource
     private HttpFetcherComponent fetcherComponent;
 
@@ -48,7 +50,7 @@ public class FinanceFetchServiceImpl implements FinanceFetchService {
             urlBuilder.append("&type=Q4");
         }
 
-        urlBuilder.append("&count=").append(count);
+        urlBuilder.append("&count=").append(count == 0 ? DEFAULT_COUNT : count);
 
         return fetcherComponent.fetchWithoutToken(urlBuilder.toString());
     }
