@@ -30,6 +30,7 @@
         <mysql.version>8.0.32</mysql.version>
         <freemarker.version>2.3.31</freemarker.version>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <httpclient.version>4.5.13</httpclient.version>
     </properties>
 
     <dependencyManagement>
@@ -85,6 +86,11 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-generator</artifactId>
                 <version>${baomidou.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

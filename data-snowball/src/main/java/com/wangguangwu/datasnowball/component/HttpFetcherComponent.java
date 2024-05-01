@@ -1,16 +1,17 @@
 package com.wangguangwu.datasnowball.component;
 
+import com.alibaba.fastjson2.JSON;
 import com.wangguangwu.datasnowball.config.XueQiuConfig;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,80 +24,47 @@ import java.util.Map;
 @Slf4j
 public class HttpFetcherComponent {
 
-    static {
-        System.setProperty("jdk.httpclient.allowRestrictedHeaders", "true");
-    }
-
     private static final String DEFAULT_HOST = "stock.xueqiu.com";
     private static final int HTTP_OK = 200;
-
-    @Resource(name = "httpClient")
-    private HttpClient client;
 
     @Resource
     private XueQiuConfig xueQiuConfig;
 
-    /**
-     * 执行HTTP GET请求。
-     *
-     * @param url     请求的URL
-     * @param headers 请求的头部信息
-     * @return 服务器响应的内容
-     */
-    public String fetch(String url, Map<String, String> headers) {
-        // 绕开安全限制
-//        System.setProperty("jdk.httpclient.allowRestrictedHeaders", "Connection,content-length,expect,host,upgrade");
-        HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .GET();
+    private final CloseableHttpClient client;
 
-        headers.forEach(requestBuilder::header);
-        HttpRequest request = requestBuilder.build();
-        HttpResponse<String> response;
-        try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+    public HttpFetcherComponent() {
+        this.client = HttpClients.createDefault();
+    }
+
+    public String fetch(String url, Map<String, String> headers) {
+        HttpGet request = new HttpGet(url);
+        headers.forEach(request::addHeader);
+
+        try (CloseableHttpResponse response = client.execute(request)) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            log.info("访问[{}]，响应实体: {}", url, JSON.toJSON(responseBody));
+            if (HTTP_OK != response.getStatusLine().getStatusCode()) {
+                log.error("访问[{}]失败，响应状态码: {}, 响应体：{}", url, response.getStatusLine().getStatusCode(), responseBody);
+                return "";
+            }
+            return responseBody;
         } catch (IOException e) {
             log.error("访问[{}]异常: {}", url, e.getMessage(), e);
             return "";
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            log.error("请求被中断: {}", e.getMessage(), e);
-            return "";
         }
-
-        if (HTTP_OK != response.statusCode()) {
-            log.error("访问[{}]失败，响应状态码: {}，响应体：{}", url, response.statusCode(), response.body());
-            return "";
-        }
-
-        return response.body();
     }
 
-    /**
-     * 获取带有Token的HTTP响应。
-     *
-     * @param url 请求的URL
-     * @return 响应内容
-     */
     public String fetch(String url) {
-        Map<String, String> headers = getDefaultHeaders();
-        return fetch(url, headers);
+        return fetch(url, getDefaultHeaders());
     }
 
-    /**
-     * 获取不带Token的HTTP响应。
-     *
-     * @param url 请求的URL
-     * @return 响应内容
-     */
     public String fetchWithoutToken(String url) {
-        Map<String, String> headers = getDefaultHeadersWithOutToken();
-        return fetch(url, headers);
+        return fetch(url, getDefaultHeadersWithOutToken());
     }
 
     private Map<String, String> getDefaultHeaders() {
         Map<String, String> headers = getDefaultHeadersWithOutToken();
-        headers.put("Cookie", xueQiuConfig.getToken());
+        headers.put("Cookie", "xq_a_token=" + xueQiuConfig.getToken());
         return headers;
     }
 
