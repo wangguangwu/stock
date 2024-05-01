@@ -10,12 +10,12 @@ public final class F10UrlConstant {
     /**
      * 获取公司股东变动信息。
      */
-    public static final String F10_SKHOLDER_CHG = "https://stock.xueqiu.com/v5/stock/f10/cn/skholderchg.json?symbol=";
+    public static final String F10_SK_HOLDER_CHG = "https://stock.xueqiu.com/v5/stock/f10/cn/skholderchg.json?symbol=";
 
     /**
      * 获取公司股东信息。
      */
-    public static final String F10_SKHOLDER = "https://stock.xueqiu.com/v5/stock/f10/cn/skholder.json?symbol=";
+    public static final String F10_SK_HOLDER = "https://stock.xueqiu.com/v5/stock/f10/cn/skholder.json?symbol=";
 
     /**
      * 获取行业信息。
@@ -50,7 +50,7 @@ public final class F10UrlConstant {
     /**
      * 获取股本变动信息。
      */
-    public static final String F10_SHARESCHG = "https://stock.xueqiu.com/v5/stock/f10/cn/shareschg.json?symbol=";
+    public static final String F10_SHARES_CHG = "https://stock.xueqiu.com/v5/stock/f10/cn/shareschg.json?symbol=";
 
     /**
      * 获取十大股东信息。
