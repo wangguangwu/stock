@@ -23,23 +23,18 @@ import java.util.Map;
 @Slf4j
 public class HttpFetcherComponent {
 
-    /**
-     * TODO: 问题
-     * 1. 为什么要注入进来一个 HttpClient，直接 new 不可以吗，有什么区别
-     * 2. 为什么要通过构造器来传入，直接使用 @Resource 注解不行吗
-     */
-    @Resource
-    private HttpClient client;
+    static {
+        System.setProperty("jdk.httpclient.allowRestrictedHeaders", "true");
+    }
+
     private static final String DEFAULT_HOST = "stock.xueqiu.com";
     private static final int HTTP_OK = 200;
 
+    @Resource(name = "httpClient")
+    private HttpClient client;
+
     @Resource
     private XueQiuConfig xueQiuConfig;
-
-    @Autowired
-    public HttpFetcherComponent(HttpClient client) {
-        this.client = client;
-    }
 
     /**
      * 执行HTTP GET请求。
@@ -49,6 +44,8 @@ public class HttpFetcherComponent {
      * @return 服务器响应的内容
      */
     public String fetch(String url, Map<String, String> headers) {
+        // 绕开安全限制
+//        System.setProperty("jdk.httpclient.allowRestrictedHeaders", "Connection,content-length,expect,host,upgrade");
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .GET();
@@ -85,7 +82,6 @@ public class HttpFetcherComponent {
         Map<String, String> headers = getDefaultHeaders();
         return fetch(url, headers);
     }
-
 
     /**
      * 获取不带Token的HTTP响应。
