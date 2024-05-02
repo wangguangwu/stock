@@ -9,6 +9,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -22,6 +23,7 @@ import java.util.Map;
  */
 @Component
 @Slf4j
+@DependsOn("xueQiuConfig")
 public class HttpFetcherComponent {
 
     private static final String DEFAULT_HOST = "stock.xueqiu.com";

@@ -48,7 +48,7 @@ public class CodeGenerator {
 
     private static void create() {
         // 创建的表名
-        String tableName = "case_flow_finance_report";
+        String tableName = "top_holders_item,top_holders_quit,top_holders_summary";
 
         // 生成文件
         FastAutoGenerator.create(URL_PATH, USER_NAME, PASSWORD)

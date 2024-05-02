@@ -1,6 +1,7 @@
 package com.wangguangwu.datasnowball.service.f10.impl;
 
 import com.wangguangwu.datasnowball.service.f10.F10FetchService;
+import com.wangguangwu.datasnowball.service.f10.F10SaveService;
 import com.wangguangwu.datasnowball.service.f10.F10Service;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -15,16 +16,19 @@ public class F10ServiceImpl implements F10Service {
 
     @Resource
     private F10FetchService fetchService;
+    @Resource
+    private F10SaveService saveService;
 
     @Override
     public String skHolderChg(String symbol) {
-        String response = fetchService.skHolderChgFetch(symbol);
-        return response;
+        return fetchService.skHolderChgFetch(symbol);
     }
 
     @Override
     public String skHolder(String symbol) {
-        return null;
+        String json = fetchService.skHolderFetch(symbol);
+        saveService.skHolderSave(json);
+        return json;
     }
 
     @Override
@@ -64,7 +68,9 @@ public class F10ServiceImpl implements F10Service {
 
     @Override
     public String topHolders(String symbol, int circula) {
-        return null;
+        String json = fetchService.topHoldersFetch(symbol, circula);
+        saveService.topHoldersSave(symbol, json);
+        return json;
     }
 
     @Override

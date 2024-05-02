@@ -35,7 +35,6 @@ public class F10FetchServiceImpl implements F10FetchService {
     @Override
     public String industryFetch(String symbol) {
         return fetcherComponent.fetch(F10UrlConstant.F10_INDUSTRY + symbol);
-
     }
 
     @Override
@@ -47,40 +46,34 @@ public class F10FetchServiceImpl implements F10FetchService {
     public String bonusFetch(String symbol, int page, int size) {
         String url = F10UrlConstant.F10_BONUS + symbol + "&page=" + (page == 0 ? DEFAULT_PAGE : page) + "&size=" + (size == 0 ? DEFAULT_SIZE : size);
         return fetcherComponent.fetch(url);
-
     }
 
     @Override
     public String orgHoldingChangeFetch(String symbol) {
         return fetcherComponent.fetch(F10UrlConstant.F10_ORG_HOLDING_CHANGE + symbol);
-
     }
 
     @Override
     public String industryCompareFetch(String symbol) {
         String url = F10UrlConstant.F10_INDUSTRY_COMPARE + symbol;
         return fetcherComponent.fetch(url);
-
     }
 
     @Override
     public String businessAnalysisFetch(String symbol) {
         return fetcherComponent.fetch(F10UrlConstant.F10_BUSINESS_ANALYSIS + symbol);
-
     }
 
     @Override
     public String sharesChgFetch(String symbol, int count) {
         String url = F10UrlConstant.F10_SHARES_CHG + symbol + "&count=" + (count == 0 ? DEFAULT_COUNT : count);
         return fetcherComponent.fetch(url);
-
     }
 
     @Override
     public String topHoldersFetch(String symbol, int circula) {
         String url = F10UrlConstant.F10_TOP_HOLDERS + symbol + "&circula=" + (circula == 0 ? DEFAULT_CIRCULA : circula);
         return fetcherComponent.fetch(url);
-
     }
 
     @Override
