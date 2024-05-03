@@ -12,7 +12,7 @@ public final class DateUtil {
     private DateUtil() {
     }
 
-    public static LocalDate convertLongToLocalDate(long timestamp) {
+    public static LocalDate convertLongToLocalDate(Long timestamp) {
         return Instant.ofEpochMilli(timestamp)
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();

@@ -46,8 +46,8 @@ public final class ConvertUtil {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rootNode = objectMapper.readTree(json);
-            JsonNode fieldsNode = rootNode.path("data").path("fields");
-            JsonNode itemsNode = rootNode.path("data").path("items");
+            JsonNode fieldsNode = rootNode.path("data").path("column");
+            JsonNode itemsNode = rootNode.path("data").path("item");
 
             List<String> fields = objectMapper.convertValue(fieldsNode, new TypeReference<>() {
             });
@@ -81,8 +81,12 @@ public final class ConvertUtil {
             field.setAccessible(true);
             if (field.getType().equals(String.class)) {
                 field.set(object, value);
+            } else if (field.getType().equals(BigDecimal.class)) {
+                field.set(object, value == null ? null : new BigDecimal(value));
+            } else if (field.getType().equals(Long.class)) {
+                field.set(object, value == null ? null : Long.parseLong(value));
             } else {
-                throw new IllegalArgumentException("Field " + fieldName + " is not of type String");
+                throw new IllegalArgumentException("Field " + fieldName + " is not supported.");
             }
         } catch (NoSuchFieldException | IllegalAccessException | IllegalArgumentException e) {
             log.error("Failed to set field value via reflection: {}", e.getMessage(), e);
@@ -131,9 +135,16 @@ public final class ConvertUtil {
     @SuppressWarnings("all")
     private static <S, T> void assignField(S source, T targetObject, Field sourceField, Field targetField) throws IllegalAccessException {
         String value = (String) sourceField.get(source);
-        if (value != null) {
+        if (CharSequenceUtil.isNotBlank(value)) {
             switch (targetField.getType().getName()) {
-                case "java.math.BigDecimal" -> targetField.set(targetObject, parseBigDecimal(value));
+                case "java.lang.Integer", "int" -> targetField.set(targetObject, Integer.parseInt(value));
+                case "java.lang.Long", "long" -> targetField.set(targetObject, Long.parseLong(value));
+                case "java.lang.Double", "double" -> targetField.set(targetObject, Double.parseDouble(value));
+                case "java.lang.Float", "float" -> targetField.set(targetObject, Float.parseFloat(value));
+                case "java.lang.Boolean", "boolean" -> targetField.set(targetObject, Boolean.parseBoolean(value));
+                case "java.lang.Short", "short" -> targetField.set(targetObject, Short.parseShort(value));
+                case "java.lang.Byte", "byte" -> targetField.set(targetObject, Byte.parseByte(value));
+                case "java.math.BigDecimal" -> targetField.set(targetObject, new BigDecimal(value));
                 case "java.time.LocalDate" -> targetField.set(targetObject, parseDate(value));
                 default -> targetField.set(targetObject, value);
             }
@@ -155,18 +166,6 @@ public final class ConvertUtil {
                 return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyyMMdd"));
             } catch (DateTimeParseException e) {
                 log.error("Invalid date format: {}", dateStr);
-                return null;
-            }
-        }
-        return null;
-    }
-
-    private static BigDecimal parseBigDecimal(String value) {
-        if (CharSequenceUtil.isNotBlank(value)) {
-            try {
-                return new BigDecimal(value);
-            } catch (NumberFormatException e) {
-                log.error("Invalid input for BigDecimal conversion: {}", value);
                 return null;
             }
         }
