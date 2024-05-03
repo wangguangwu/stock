@@ -52,40 +52,36 @@ public class F10SaveServiceImpl implements F10SaveService {
     }
 
     @Override
-    public void topHoldersSave(String symbol, String json) {
+    public boolean topHoldersSave(String symbol, String json) {
         if (CharSequenceUtil.isBlank(json)) {
-            return;
+            return false;
         }
 
-        ApiResponseUtil.transfer(json, TopHoldersResponseData.class)
-                .ifPresent(data -> processTimeData(data, symbol));
+        return ApiResponseUtil.transfer(json, TopHoldersResponseData.class)
+                .map(data -> processTimeData(data, symbol))
+                .orElse(false);
     }
 
-    private void processTimeData(TopHoldersResponseData data, String symbol) {
-        data.getTimes().stream()
-                .max(Comparator.comparingLong(TimeData::getValue))
-                .ifPresent(maxTimeData -> {
-                    String currentReportName = maxTimeData.getName();
-                    if (!topHolderService.existReport(symbol, currentReportName)) {
-                        saveResponseData(data, symbol, currentReportName, maxTimeData.getValue());
-                    }
-                });
+    private boolean processTimeData(TopHoldersResponseData data, String symbol) {
+        return data.getTimes().stream().max(Comparator.comparingLong(TimeData::getValue)).map(maxTimeData -> {
+            String currentReportName = maxTimeData.getName();
+            if (!topHolderService.existReport(symbol, currentReportName)) {
+                return saveResponseData(data, symbol, currentReportName, maxTimeData.getValue());
+            }
+            return false;
+        }).orElse(false);
     }
 
-    private void saveResponseData(TopHoldersResponseData data, String symbol, String currentReportName, Long reportDate) {
+    private boolean saveResponseData(TopHoldersResponseData data, String symbol, String currentReportName, Long reportDate) {
         // 当前报告汇总
         TopHoldersSummaryDO topHoldersSummaryDO = ConvertUtil.convertSourceToTarget(data.getTotal(), TopHoldersSummaryDO.class);
         topHoldersSummaryDO.setSymbol(symbol);
         topHoldersSummaryDO.setReportName(currentReportName);
         topHoldersSummaryDO.setReportDate(DateUtil.convertLongToLocalDate(reportDate));
         // 当前十大股东
-        List<TopHoldersItemDO> topHoldersItemDOList = data.getItems().stream()
-                .map(item -> ConvertUtil.convertSourceToTarget(item, TopHoldersItemDO.class))
-                .toList();
+        List<TopHoldersItemDO> topHoldersItemDOList = data.getItems().stream().map(item -> ConvertUtil.convertSourceToTarget(item, TopHoldersItemDO.class)).toList();
         // 当前报告下退出
-        List<TopHoldersQuitDO> topHoldersQuitDOList = data.getQuit().stream()
-                .map(quit -> ConvertUtil.convertSourceToTarget(quit, TopHoldersQuitDO.class))
-                .toList();
-        topHolderService.saveTopHolderMessages(topHoldersSummaryDO, topHoldersItemDOList, topHoldersQuitDOList);
+        List<TopHoldersQuitDO> topHoldersQuitDOList = data.getQuit().stream().map(quit -> ConvertUtil.convertSourceToTarget(quit, TopHoldersQuitDO.class)).toList();
+        return topHolderService.saveTopHolderMessages(topHoldersSummaryDO, topHoldersItemDOList, topHoldersQuitDOList);
     }
 }

@@ -85,9 +85,9 @@ public interface F10Service {
      *
      * @param symbol  股票代码
      * @param circula 循环次数
-     * @return 十大股东信息
+     * @return 是否获取成功
      */
-    String topHolders(String symbol, int circula);
+    boolean topHolders(String symbol, int circula);
 
     /**
      * 获取财务指标信息。

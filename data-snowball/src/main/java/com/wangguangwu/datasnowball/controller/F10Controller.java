@@ -60,7 +60,7 @@ public class F10Controller {
     }
 
     @GetMapping("/topHolders/{symbol}")
-    public String getTopHolders(@PathVariable String symbol, @RequestParam(defaultValue = "1") int circula) {
+    public boolean getTopHolders(@PathVariable String symbol, @RequestParam(defaultValue = "1") int circula) {
         return f10Service.topHolders(symbol, circula);
     }
 

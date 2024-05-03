@@ -1,6 +1,7 @@
 package com.wangguangwu.datasnowball.service.f10.impl;
 
 import com.wangguangwu.datasnowball.service.f10.F10FetchService;
+import com.wangguangwu.datasnowball.service.f10.F10QueryService;
 import com.wangguangwu.datasnowball.service.f10.F10SaveService;
 import com.wangguangwu.datasnowball.service.f10.F10Service;
 import jakarta.annotation.Resource;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class F10ServiceImpl implements F10Service {
 
+    @Resource
+    private F10QueryService queryService;
     @Resource
     private F10FetchService fetchService;
     @Resource
@@ -67,10 +70,13 @@ public class F10ServiceImpl implements F10Service {
     }
 
     @Override
-    public String topHolders(String symbol, int circula) {
-        String json = fetchService.topHoldersFetch(symbol, circula);
-        saveService.topHoldersSave(symbol, json);
-        return json;
+    public boolean topHolders(String symbol, int circula) {
+        boolean needUpdated = queryService.topHoldersQuery(symbol);
+        if (needUpdated) {
+            String json = fetchService.topHoldersFetch(symbol, circula);
+            return saveService.topHoldersSave(symbol, json);
+        }
+        return true;
     }
 
     @Override

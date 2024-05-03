@@ -13,9 +13,9 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author wangguangwu
@@ -24,6 +24,8 @@ import java.util.Optional;
 @Slf4j
 public class TopHolderServiceImpl implements TopHolderService {
 
+    @Resource
+    private TransactionTemplate transactionTemplate;
     @Resource
     private TopHoldersSummaryService topHoldersSummaryService;
     @Resource
@@ -38,38 +40,53 @@ public class TopHolderServiceImpl implements TopHolderService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveTopHolderMessages(TopHoldersSummaryDO topHoldersSummaryDO, List<TopHoldersItemDO> topHoldersItemDOList, List<TopHoldersQuitDO> topHoldersQuitDOList) {
-        getSummaryId(topHoldersSummaryDO).ifPresent(
-                summaryId -> {
-                    if (CollUtil.isNotEmpty(topHoldersItemDOList)) {
-                        topHoldersItemDOList.forEach(item -> item.setSummaryId(summaryId));
-                        topHoldersItemService.saveBatch(topHoldersItemDOList);
-                    }
-                    if (CollUtil.isNotEmpty(topHoldersQuitDOList)) {
-                        topHoldersQuitDOList.forEach(quit -> quit.setSummaryId(summaryId));
-                        topHoldersQuitService.saveBatch(topHoldersQuitDOList);
-                    }
-                }
-        );
+    public boolean saveTopHolderMessages(TopHoldersSummaryDO topHoldersSummaryDO, List<TopHoldersItemDO> topHoldersItemDOList, List<TopHoldersQuitDO> topHoldersQuitDOList) {
+        return Boolean.TRUE.equals(transactionTemplate.execute(status -> {
+            Integer summaryId = getSummaryId(topHoldersSummaryDO);
+            if (summaryId == null) {
+                return false;
+            }
+
+            boolean itemsSaved = processItemList(topHoldersItemDOList, summaryId);
+            boolean quitsSaved = processQuitList(topHoldersQuitDOList, summaryId);
+
+            if (!itemsSaved || !quitsSaved) {
+                status.setRollbackOnly();
+                return false;
+            }
+            return true;
+        }));
     }
 
-    private Optional<Integer> getSummaryId(TopHoldersSummaryDO topHoldersSummaryDO) {
+    private boolean processItemList(List<TopHoldersItemDO> items, Integer summaryId) {
+        if (CollUtil.isEmpty(items)) {
+            return true;
+        }
+        items.forEach(item -> item.setSummaryId(summaryId));
+        return topHoldersItemService.saveBatch(items);
+    }
+
+    private boolean processQuitList(List<TopHoldersQuitDO> quits, Integer summaryId) {
+        if (CollUtil.isEmpty(quits)) {
+            return true;
+        }
+        quits.forEach(quit -> quit.setSummaryId(summaryId));
+        return topHoldersQuitService.saveBatch(quits);
+    }
+
+    private Integer getSummaryId(TopHoldersSummaryDO topHoldersSummaryDO) {
         boolean save = topHoldersSummaryService.save(topHoldersSummaryDO);
         if (!save) {
-            return Optional.empty();
+            return null;
         }
         List<TopHoldersSummaryDO> summaryDOList = topHoldersSummaryService.list(getReportExists(topHoldersSummaryDO.getSymbol(), topHoldersSummaryDO.getReportName()));
 
-        return summaryDOList.stream()
-                .findFirst()
-                .map(TopHoldersSummaryDO::getId);
+        return summaryDOList.stream().findFirst().map(TopHoldersSummaryDO::getId).orElse(null);
     }
 
     private static LambdaQueryWrapper<TopHoldersSummaryDO> getReportExists(String symbol, String reportName) {
         LambdaQueryWrapper<TopHoldersSummaryDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(TopHoldersSummaryDO::getSymbol, symbol)
-                .eq(TopHoldersSummaryDO::getReportName, reportName)
-                .eq(TopHoldersSummaryDO::getIsDeleted, false);
+        queryWrapper.eq(TopHoldersSummaryDO::getSymbol, symbol).eq(TopHoldersSummaryDO::getReportName, reportName).eq(TopHoldersSummaryDO::getIsDeleted, false);
         return queryWrapper;
     }
 }

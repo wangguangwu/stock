@@ -17,7 +17,8 @@ public interface F10SaveService {
      *
      * @param symbol 股票代码
      * @param json   json 报文
+     * @return 是否更新成功
      */
-    void topHoldersSave(String symbol, String json);
+    boolean topHoldersSave(String symbol, String json);
 
 }

@@ -26,6 +26,8 @@ public interface TopHolderService {
      * @param topHoldersSummaryDO  十大股东汇总
      * @param topHoldersItemDOList 十大股东详情
      * @param topHoldersQuitDOList 十大股东退出
+     * @return 是否更新成功
      */
-    void saveTopHolderMessages(TopHoldersSummaryDO topHoldersSummaryDO, List<TopHoldersItemDO> topHoldersItemDOList, List<TopHoldersQuitDO> topHoldersQuitDOList);
+    boolean saveTopHolderMessages(TopHoldersSummaryDO topHoldersSummaryDO, List<TopHoldersItemDO> topHoldersItemDOList, List<TopHoldersQuitDO> topHoldersQuitDOList);
+
 }
