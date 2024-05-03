@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangguangwu.datasnowball.mapper.TopHolderMapper">
+
+    <select id="listTopHolderInfo" resultType="java.lang.String">
+        SELECT s.symbol, thi.chg
+        FROM stock_basic_info s
+                 LEFT JOIN top_holders_summary ths ON s.symbol = ths.symbol
+                 LEFT JOIN top_holders_item thi ON ths.id = thi.summary_id
+        WHERE thi.holder_name LIKE concat("%", #{holderName}, "%")
+          AND s.market = #{market}
+        ORDER BY thi.chg;
+    </select>
+</mapper>

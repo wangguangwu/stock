@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.wangguangwu.datasnowball.entity.TopHoldersItemDO;
 import com.wangguangwu.datasnowball.entity.TopHoldersQuitDO;
 import com.wangguangwu.datasnowball.entity.TopHoldersSummaryDO;
+import com.wangguangwu.datasnowball.mapper.TopHolderMapper;
 import com.wangguangwu.datasnowball.service.basic.TopHoldersItemService;
 import com.wangguangwu.datasnowball.service.basic.TopHoldersQuitService;
 import com.wangguangwu.datasnowball.service.basic.TopHoldersSummaryService;
@@ -32,6 +33,8 @@ public class TopHolderServiceImpl implements TopHolderService {
     private TopHoldersItemService topHoldersItemService;
     @Resource
     private TopHoldersQuitService topHoldersQuitService;
+    @Resource
+    private TopHolderMapper topHolderMapper;
 
     @Override
     public boolean existReport(String symbol, String reportName) {
@@ -56,6 +59,11 @@ public class TopHolderServiceImpl implements TopHolderService {
             }
             return true;
         }));
+    }
+
+    @Override
+    public List<String> listTopHolderInfo(String holderName, String market) {
+        return topHolderMapper.listTopHolderInfo(holderName, market);
     }
 
     private boolean processItemList(List<TopHoldersItemDO> items, Integer summaryId) {

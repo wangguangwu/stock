@@ -30,4 +30,13 @@ public interface TopHolderService {
      */
     boolean saveTopHolderMessages(TopHoldersSummaryDO topHoldersSummaryDO, List<TopHoldersItemDO> topHoldersItemDOList, List<TopHoldersQuitDO> topHoldersQuitDOList);
 
+    /**
+     * 查询持股者持有的股票名称
+     *
+     * @param holderName 持股者
+     * @param market     对应板块
+     * @return 持股者持有的股票名称
+     */
+    List<String> listTopHolderInfo(String holderName, String market);
+
 }

@@ -26,7 +26,7 @@ public class RealTimeController {
      * @return K 线图
      */
     @GetMapping("/kline")
-    public boolean kline(String symbol, @RequestParam(defaultValue = "30") int days) {
+    public boolean kline(String symbol, @RequestParam(defaultValue = "90") int days) {
         return realTimeService.kline(symbol, days);
     }
 
