@@ -1,7 +1,6 @@
 package com.wangguangwu.datasnowball.service.f10.impl;
 
 import com.wangguangwu.datasnowball.service.f10.F10FetchService;
-import com.wangguangwu.datasnowball.service.f10.F10QueryService;
 import com.wangguangwu.datasnowball.service.f10.F10SaveService;
 import com.wangguangwu.datasnowball.service.f10.F10Service;
 import jakarta.annotation.Resource;
@@ -15,8 +14,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class F10ServiceImpl implements F10Service {
 
-    @Resource
-    private F10QueryService queryService;
     @Resource
     private F10FetchService fetchService;
     @Resource
@@ -36,51 +33,48 @@ public class F10ServiceImpl implements F10Service {
 
     @Override
     public String industry(String symbol) {
-        return null;
+        return fetchService.industryFetch(symbol);
     }
 
     @Override
     public String holders(String symbol) {
-        return null;
+        return fetchService.holdersFetch(symbol);
     }
 
     @Override
     public String bonus(String symbol, int page, int size) {
-        return null;
+        return fetchService.bonusFetch(symbol, page, size);
     }
 
     @Override
     public String orgHoldingChange(String symbol) {
-        return null;
+        return fetchService.orgHoldingChangeFetch(symbol);
     }
 
     @Override
     public String industryCompare(String symbol) {
-        return null;
+        return fetchService.industryCompareFetch(symbol);
     }
 
     @Override
     public String businessAnalysis(String symbol) {
-        return null;
+        return fetchService.businessAnalysisFetch(symbol);
     }
 
     @Override
     public String sharesChg(String symbol, int count) {
-        return null;
+        return fetchService.sharesChgFetch(symbol, count);
     }
 
     @Override
     public boolean topHolders(String symbol, int circula) {
-        boolean needUpdated = queryService.topHoldersQuery(symbol);
-        if (needUpdated) {
-            String json = fetchService.topHoldersFetch(symbol, circula);
-            return saveService.topHoldersSave(symbol, json);
-        }
-        return true;
+        String json = fetchService.topHoldersFetch(symbol, circula);
+        return saveService.topHoldersSave(symbol, json);
     }
 
     @Override
     public String mainIndicator(String symbol) {
-        return null;
+        // TODO：获取财务指标信息。
+        return fetchService.mainIndicatorFetch(symbol);
     }
 }

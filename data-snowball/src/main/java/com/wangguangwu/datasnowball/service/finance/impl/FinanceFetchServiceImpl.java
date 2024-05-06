@@ -20,23 +20,23 @@ public class FinanceFetchServiceImpl implements FinanceFetchService {
     private HttpFetcherComponent fetcherComponent;
 
     @Override
-    public String caseFlow(String symbol, int isAnnals, int count) {
+    public String caseFlowFetch(String symbol, int isAnnals, int count) {
         return fetchData(FinanceUrlConstant.FINANCE_CASH_FLOW_URL, symbol, isAnnals, count);
     }
 
-    public String indicator(String symbol, int isAnnals, int count) {
+    public String indicatorFetch(String symbol, int isAnnals, int count) {
         return fetchData(FinanceUrlConstant.FINANCE_INDICATOR_URL, symbol, isAnnals, count);
     }
 
-    public String balance(String symbol, int isAnnals, int count) {
+    public String balanceFetch(String symbol, int isAnnals, int count) {
         return fetchData(FinanceUrlConstant.FINANCE_BALANCE_URL, symbol, isAnnals, count);
     }
 
-    public String income(String symbol, int isAnnals, int count) {
+    public String incomeFetch(String symbol, int isAnnals, int count) {
         return fetchData(FinanceUrlConstant.FINANCE_INCOME_URL, symbol, isAnnals, count);
     }
 
-    public String business(String symbol, int isAnnals, int count) {
+    public String businessFetch(String symbol, int isAnnals, int count) {
         return fetchData(FinanceUrlConstant.FINANCE_BUSINESS_URL, symbol, isAnnals, count);
     }
 
