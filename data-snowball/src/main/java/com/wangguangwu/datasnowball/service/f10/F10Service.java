@@ -93,8 +93,8 @@ public interface F10Service {
      * 获取财务指标信息。
      *
      * @param symbol 股票代码
-     * @return 财务指标信息
+     * @return 是否获取成功
      */
-    String mainIndicator(String symbol);
+    boolean mainIndicator(String symbol);
 
 }

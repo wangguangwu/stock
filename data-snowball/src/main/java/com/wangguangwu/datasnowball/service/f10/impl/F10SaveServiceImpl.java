@@ -4,14 +4,18 @@ import cn.hutool.core.text.CharSequenceUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wangguangwu.datasnowball.entity.MainIndicatorItemDO;
 import com.wangguangwu.datasnowball.entity.TopHoldersItemDO;
 import com.wangguangwu.datasnowball.entity.TopHoldersQuitDO;
 import com.wangguangwu.datasnowball.entity.TopHoldersSummaryDO;
 import com.wangguangwu.datasnowball.response.ApiResponse;
+import com.wangguangwu.datasnowball.response.f10.mainindicator.MainIndicatorItem;
+import com.wangguangwu.datasnowball.response.f10.mainindicator.MainIndicatorResponseData;
 import com.wangguangwu.datasnowball.response.f10.skholder.SkHolderResponseData;
 import com.wangguangwu.datasnowball.response.f10.topholders.TimeData;
 import com.wangguangwu.datasnowball.response.f10.topholders.TopHoldersResponseData;
 import com.wangguangwu.datasnowball.service.f10.F10SaveService;
+import com.wangguangwu.datasnowball.service.f10.MainIndicatorService;
 import com.wangguangwu.datasnowball.service.f10.TopHolderService;
 import com.wangguangwu.datasnowball.util.ApiResponseUtil;
 import com.wangguangwu.datasnowball.util.ConvertUtil;
@@ -22,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author wangguangwu
@@ -32,6 +37,8 @@ public class F10SaveServiceImpl implements F10SaveService {
 
     @Resource
     private TopHolderService topHolderService;
+    @Resource
+    private MainIndicatorService mainIndicatorService;
 
     @Override
     public void skHolderSave(String json) {
@@ -60,6 +67,34 @@ public class F10SaveServiceImpl implements F10SaveService {
         return ApiResponseUtil.transfer(json, TopHoldersResponseData.class)
                 .map(data -> processTimeData(data, symbol))
                 .orElse(false);
+    }
+
+    @Override
+    public boolean mainIndicatorSave(String symbol, String json) {
+        if (CharSequenceUtil.isBlank(json)) {
+            return false;
+        }
+
+        return ApiResponseUtil.transfer(json, MainIndicatorResponseData.class)
+                .map(data -> processMainIndicatorItem(symbol, data))
+                .orElse(false);
+    }
+
+    //=====================================私有方法==========================================
+
+    private boolean processMainIndicatorItem(String symbol, MainIndicatorResponseData data) {
+        Set<String> existsReports = mainIndicatorService.listExistsReports(symbol);
+
+        List<MainIndicatorItemDO> mainIndicatorItemDOList = data.getItems().stream()
+                .filter(item -> !existsReports.contains(item.getReportDate()))
+                .map(item -> {
+                    MainIndicatorItemDO mainIndicatorItemDO = ConvertUtil.convertSourceToTarget(item, MainIndicatorItemDO.class);
+                    mainIndicatorItemDO.setSymbol(symbol);
+                    return mainIndicatorItemDO;
+                })
+                .toList();
+
+        return mainIndicatorService.saveMainIndicators(mainIndicatorItemDOList);
     }
 
     private boolean processTimeData(TopHoldersResponseData data, String symbol) {

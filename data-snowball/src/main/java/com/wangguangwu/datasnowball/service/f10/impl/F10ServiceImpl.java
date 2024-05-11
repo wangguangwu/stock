@@ -73,8 +73,8 @@ public class F10ServiceImpl implements F10Service {
     }
 
     @Override
-    public String mainIndicator(String symbol) {
-        // TODO：获取财务指标信息。
-        return fetchService.mainIndicatorFetch(symbol);
+    public boolean mainIndicator(String symbol) {
+        String json = fetchService.mainIndicatorFetch(symbol);
+        return saveService.mainIndicatorSave(symbol, json);
     }
 }

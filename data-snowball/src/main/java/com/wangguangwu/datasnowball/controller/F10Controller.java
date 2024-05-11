@@ -65,7 +65,7 @@ public class F10Controller {
     }
 
     @GetMapping("/mainIndicator/{symbol}")
-    public String getMainIndicator(@PathVariable String symbol) {
+    public boolean getMainIndicator(@PathVariable String symbol) {
         return f10Service.mainIndicator(symbol);
     }
 }
