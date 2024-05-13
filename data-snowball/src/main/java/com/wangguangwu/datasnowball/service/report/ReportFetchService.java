@@ -17,7 +17,7 @@ public interface ReportFetchService {
      * @param symbol 股票代码
      * @return 最新的财务报告数据
      */
-    String latest(String symbol);
+    String latestFetch(String symbol);
 
     /**
      * 获取公司的盈利预测报告。
@@ -25,6 +25,6 @@ public interface ReportFetchService {
      * @param symbol 股票代码
      * @return 盈利预测报告数据
      */
-    String earningForecast(String symbol);
+    String earningForecastFetch(String symbol);
 
 }

@@ -1,6 +1,5 @@
 package com.wangguangwu.datasnowball.controller;
 
-import com.wangguangwu.datasnowball.service.realtime.RealTimeFetchService;
 import com.wangguangwu.datasnowball.service.realtime.RealTimeService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;

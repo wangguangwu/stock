@@ -19,4 +19,8 @@ public class F10Schedule {
         f10ScheduleService.updateTopHolders();
     }
 
+    @Scheduled(cron = "0 35 12 ? * *")
+    public void updateMainIndicators() {
+        f10ScheduleService.updateMainIndicators();
+    }
 }

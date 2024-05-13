@@ -1,9 +1,7 @@
 package com.wangguangwu.datasnowball.service.schedule.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.wangguangwu.datasnowball.entity.StockBasicInfoDO;
-import com.wangguangwu.datasnowball.service.basic.StockBasicInfoService;
+import com.wangguangwu.datasnowball.component.StockBasicComponent;
 import com.wangguangwu.datasnowball.service.f10.F10Service;
 import com.wangguangwu.datasnowball.service.schedule.F10ScheduleService;
 import jakarta.annotation.Resource;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -26,13 +23,11 @@ public class F10ScheduleServiceImpl implements F10ScheduleService {
     @Resource
     private F10Service f10Service;
     @Resource
-    private StockBasicInfoService stockBasicInfoService;
+    private StockBasicComponent stockBasicComponent;
 
     @Override
     public void updateTopHolders() {
-        LambdaQueryWrapper<StockBasicInfoDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(StockBasicInfoDO::getIsDeleted, false);
-        List<String> symbolList = stockBasicInfoService.list(queryWrapper).stream().map(StockBasicInfoDO::getSymbol).toList();
+        List<String> symbolList = stockBasicComponent.getSymbolList();
         if (CollUtil.isEmpty(symbolList)) {
             return;
         }
@@ -44,6 +39,28 @@ public class F10ScheduleServiceImpl implements F10ScheduleService {
                 symbolMap.put(symbol, succeed);
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+        });
+        System.out.println(symbolMap);
+    }
+
+    @Override
+    public void updateMainIndicators() {
+        List<String> symbolList = stockBasicComponent.getSymbolList();
+        if (CollUtil.isEmpty(symbolList)) {
+            return;
+        }
+        Map<String, Boolean> symbolMap = new HashMap<>();
+        symbolList.forEach(symbol -> {
+            try {
+                TimeUnit.SECONDS.sleep(3);
+                boolean succeed = f10Service.mainIndicator(symbol);
+                if (!succeed) {
+                    symbolMap.put(symbol, succeed);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                symbolMap.put(symbol, false);
             }
         });
         System.out.println(symbolMap);

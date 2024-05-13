@@ -10,4 +10,9 @@ public interface F10ScheduleService {
      */
     void updateTopHolders();
 
+    /**
+     * 更新财务指标信息
+     */
+    void updateMainIndicators();
+
 }

@@ -3,6 +3,7 @@ package com.wangguangwu.datasnowball.controller;
 import com.wangguangwu.datasnowball.service.finance.FinanceFetchService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 
 @RestController
+@RequestMapping("/finance")
 public class FinanceController {
 
     @Resource

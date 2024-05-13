@@ -18,18 +18,18 @@ public class ReportFetchServiceImpl implements ReportFetchService {
     private HttpFetcherComponent fetcherComponent;
 
     @Override
-    public String latest(String symbol) {
+    public String latestFetch(String symbol) {
         return fetchData(ReportUrlConstant.REPORT_LATEST_URL, symbol);
     }
 
     @Override
-    public String earningForecast(String symbol) {
+    public String earningForecastFetch(String symbol) {
         return fetchData(ReportUrlConstant.REPORT_EARNING_FORECAST_URL, symbol);
     }
 
     //=====================================私有方法==========================================
 
     private String fetchData(String baseUrl, String symbol) {
-        return fetcherComponent.fetchWithoutToken(baseUrl + symbol);
+        return fetcherComponent.fetch(baseUrl + symbol);
     }
 }
