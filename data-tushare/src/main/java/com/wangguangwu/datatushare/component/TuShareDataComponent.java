@@ -7,6 +7,7 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import com.alibaba.fastjson2.JSON;
 import com.wangguangwu.datatushare.constant.UrlConstant;
+import com.wangguangwu.datatushare.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
@@ -38,11 +39,12 @@ public abstract class TuShareDataComponent<T> {
     protected abstract JSONObject createBasicRequestBody();
 
     /**
-     * 保存数据
+     * 保存或者更新数据
      *
      * @param list 数据
+     * @return 是否保存成功
      */
-    protected abstract void saveOrUpdateBatch(List<T> list);
+    protected abstract boolean saveOrUpdateBatch(List<T> list);
 
     /**
      * 解析 tushare 响应中的 item
@@ -56,14 +58,14 @@ public abstract class TuShareDataComponent<T> {
         this.params = params;
     }
 
-    public final void fetchAndSaveData(String operation) {
+    public final boolean fetchAndSaveData(String operation) {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start("发起请求");
         String responseBody = sendRequest();
         stopWatch.stop();
 
         if (responseBody == null) {
-            return;
+            return true;
         }
 
         stopWatch.start("解析数据");
@@ -71,26 +73,38 @@ public abstract class TuShareDataComponent<T> {
         stopWatch.stop();
 
         if (CollUtil.isEmpty(dataList)) {
-            return;
+            return true;
         }
 
         stopWatch.start("保存数据");
-        saveOrUpdateBatch(dataList);
+        boolean saveResult = saveOrUpdateBatch(dataList);
         stopWatch.stop();
         log.info("执行[{}]耗时: {}", operation, stopWatch.prettyPrint());
+        return saveResult;
     }
 
     private String sendRequest() {
-        JSONObject jsonBody = createBasicRequestBody();
-        jsonBody.set("params", params);
-        jsonBody.set("token", TOKEN);
-        HttpResponse httpResponse = HttpRequest.post(UrlConstant.PRO_URL).body(jsonBody.toStringPretty()).execute();
+        try {
+            JSONObject jsonBody = createBasicRequestBody();
+            jsonBody.set("params", params);
+            jsonBody.set("token", TOKEN);
 
-        if (httpResponse.isOk()) {
-            return httpResponse.body();
-        } else {
-            log.error("Failed to fetch data: {}, error message: {}", httpResponse.getStatus(), JSON.toJSON(httpResponse));
-            return null;
+            HttpResponse httpResponse = HttpRequest.post(UrlConstant.PRO_URL)
+                    .body(jsonBody.toString())
+                    .execute();
+
+            if (httpResponse.isOk()) {
+                return httpResponse.body();
+            } else {
+                String errorMessage = String.format("Failed to fetch data: Status=%d, Response=%s",
+                        httpResponse.getStatus(), JSON.toJSON(httpResponse.body()));
+                log.error(errorMessage);
+                throw new ServiceException(errorMessage);
+            }
+        } catch (Exception e) {
+            String errorMsg = "An exception occurred while sending request";
+            log.error(errorMsg, e);
+            throw new ServiceException(errorMsg, e);
         }
     }
 

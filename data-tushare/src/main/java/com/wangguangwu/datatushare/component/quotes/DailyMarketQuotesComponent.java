@@ -1,6 +1,8 @@
 package com.wangguangwu.datatushare.component.quotes;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.wangguangwu.datatushare.component.TuShareDataComponent;
 import com.wangguangwu.datatushare.constant.QueryFieldsConstant;
 import com.wangguangwu.datatushare.dto.MarketQuotes;
@@ -11,7 +13,10 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author wangguangwu
@@ -33,14 +38,32 @@ public class DailyMarketQuotesComponent extends TuShareDataComponent<DailyMarket
     }
 
     @Override
-    protected void saveOrUpdateBatch(List<DailyMarketQuotesDO> list) {
-        dailyMarketQuotesService.saveOrUpdateBatch(list);
+    protected boolean saveOrUpdateBatch(List<DailyMarketQuotesDO> list) {
+        if (CollUtil.isEmpty(list)) {
+            return true;
+        }
+        Set<LocalDate> tradeDateSet = getExistsTradeDate(list);
+        List<DailyMarketQuotesDO> result = list.stream().filter(dailyMarketQuotesDO -> !tradeDateSet.contains(dailyMarketQuotesDO.getTradeDate())).toList();
+        return dailyMarketQuotesService.saveOrUpdateBatch(result);
     }
 
     @Override
     protected List<DailyMarketQuotesDO> convertItemToDataObject(String json) {
         List<MarketQuotes> marketQuotes = ConvertUtil.convertJsonToObjects(json, MarketQuotes.class);
         return marketQuotes.stream().map(this::getDailyMarketQuotesDO).toList();
+    }
+
+    //=====================================私有方法==========================================
+
+    private Set<LocalDate> getExistsTradeDate(List<DailyMarketQuotesDO> list) {
+        String tsCode = list.get(0).getTsCode();
+        Set<LocalDate> tradeDateSet = list.stream().map(DailyMarketQuotesDO::getTradeDate).collect(Collectors.toSet());
+        LambdaQueryWrapper<DailyMarketQuotesDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(DailyMarketQuotesDO::getTsCode, tsCode)
+                .in(DailyMarketQuotesDO::getTradeDate, tradeDateSet)
+                .select(DailyMarketQuotesDO::getTradeDate);
+        return dailyMarketQuotesService.list(queryWrapper).stream()
+                .map(DailyMarketQuotesDO::getTradeDate).collect(Collectors.toSet());
     }
 
     private DailyMarketQuotesDO getDailyMarketQuotesDO(MarketQuotes marketQuotes) {

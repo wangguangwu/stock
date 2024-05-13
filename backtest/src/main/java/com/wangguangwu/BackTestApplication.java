@@ -1,22 +1,20 @@
-package com.wangguangwu.datatushare;
+package com.wangguangwu;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * @author wangguangwu
  */
 @SpringBootApplication
-@MapperScan("com.wangguangwu.datatushare.mapper")
+@MapperScan("com.wangguangwu.backtest.mapper")
 @EnableTransactionManagement
-@EnableScheduling
-public class DataTushareApplication {
+public class BackTestApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(DataTushareApplication.class, args);
+        public static void main(String[] args) {
+        SpringApplication.run(BackTestApplication.class, args);
     }
 
 }

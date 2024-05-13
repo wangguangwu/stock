@@ -34,8 +34,8 @@ public class StockBasicComponent extends TuShareDataComponent<StockBasicInfoDO> 
     }
 
     @Override
-    protected void saveOrUpdateBatch(List<StockBasicInfoDO> list) {
-        stockBasicInfoService.saveOrUpdateBatch(list);
+    protected boolean saveOrUpdateBatch(List<StockBasicInfoDO> list) {
+        return stockBasicInfoService.saveOrUpdateBatch(list);
     }
 
     @Override

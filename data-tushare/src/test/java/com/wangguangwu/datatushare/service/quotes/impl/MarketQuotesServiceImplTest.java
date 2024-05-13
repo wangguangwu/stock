@@ -29,6 +29,6 @@ class MarketQuotesServiceImplTest {
 
     @Test
     void bakDaily() {
-        marketDataService.bakDaily("601318.SH", DateFormatUtil.formatYYYYMMDD(), DateFormatUtil.formatYYYYMMDD(), "", "", "");
+        marketDataService.bakDaily("601318.SH", DateFormatUtil.formatYYYYMMDD(), DateFormatUtil.formatYYYYMMDD(), "");
     }
 }

@@ -33,8 +33,8 @@ public class DailyBasicComponent extends TuShareDataComponent<DailyIndicatorsDO>
     }
 
     @Override
-    protected void saveOrUpdateBatch(List<DailyIndicatorsDO> list) {
-        dailyIndicatorsService.saveOrUpdateBatch(list);
+    protected boolean saveOrUpdateBatch(List<DailyIndicatorsDO> list) {
+        return dailyIndicatorsService.saveOrUpdateBatch(list);
     }
 
     private DailyIndicatorsDO getDailyIndicatorsDO(DailyIndicators dailyIndicators) {

@@ -33,8 +33,8 @@ public class WeeklyMarketQuotesComponent extends TuShareDataComponent<WeeklyMark
     }
 
     @Override
-    protected void saveOrUpdateBatch(List<WeeklyMarketQuotesDO> list) {
-        weeklyMarketQuotesService.saveOrUpdateBatch(list);
+    protected boolean saveOrUpdateBatch(List<WeeklyMarketQuotesDO> list) {
+        return weeklyMarketQuotesService.saveOrUpdateBatch(list);
     }
 
     @Override

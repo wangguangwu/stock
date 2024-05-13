@@ -33,8 +33,8 @@ public class BakDailyComponent extends TuShareDataComponent<BakDailyDO> {
     }
 
     @Override
-    protected void saveOrUpdateBatch(List<BakDailyDO> list) {
-        bakDailyService.saveOrUpdateBatch(list);
+    protected boolean saveOrUpdateBatch(List<BakDailyDO> list) {
+        return bakDailyService.saveOrUpdateBatch(list);
     }
 
     @Override
