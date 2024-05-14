@@ -34,16 +34,19 @@ public class MarketQuotesScheduleServiceImpl implements MarketQuotesScheduleServ
             return;
         }
         List<String> errorTsCodeList = new ArrayList<>();
-        tsCodeList.forEach(tsCode -> {
-            try {
-                boolean succeed = marketQuotesService.dailyMarketQuotes(tsCode, DateFormatUtil.formatYYYYMMDD(), DateFormatUtil.formatYYYYMMDD(), DateFormatUtil.formatYYYYMMDD());
-                if (!succeed) {
+        for (int i = 0; i < 90; i++) {
+            String date = DateFormatUtil.formatYYYYMMDD(i);
+            tsCodeList.forEach(tsCode -> {
+                try {
+                    boolean succeed = marketQuotesService.dailyMarketQuotes(tsCode, date, date, date);
+                    if (!succeed) {
+                        errorTsCodeList.add(tsCode);
+                    }
+                } catch (Exception e) {
                     errorTsCodeList.add(tsCode);
                 }
-            } catch (Exception e) {
-                errorTsCodeList.add(tsCode);
-            }
-        });
+            });
+        }
         if (CollUtil.isNotEmpty(errorTsCodeList)) {
             log.info("更新日行情失败: {}", JSON.toJSON(errorTsCodeList));
         }

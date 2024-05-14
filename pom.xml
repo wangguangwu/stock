@@ -32,6 +32,7 @@
         <freemarker.version>2.3.31</freemarker.version>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <httpclient.version>4.5.13</httpclient.version>
+        <jfreechart.version>1.5.4</jfreechart.version>
     </properties>
 
     <dependencyManagement>
@@ -92,6 +93,11 @@
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
                 <version>${httpclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jfree</groupId>
+                <artifactId>jfreechart</artifactId>
+                <version>${jfreechart.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

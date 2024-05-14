@@ -14,7 +14,7 @@ public class MarketQuotesSchedule {
     @Resource
     private MarketQuotesScheduleService marketQuotesScheduleService;
 
-    @Scheduled(cron = "0 28 20 ? * *")
+    @Scheduled(cron = "0 41 20 ? * *")
     public void updateDaily() {
         marketQuotesScheduleService.updateDaily();
     }
