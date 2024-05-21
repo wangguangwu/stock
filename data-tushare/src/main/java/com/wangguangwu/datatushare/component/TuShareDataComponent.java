@@ -29,7 +29,7 @@ import static com.wangguangwu.datatushare.constant.TokenConstant.TOKEN;
 @Slf4j
 public abstract class TuShareDataComponent<T> {
 
-    protected JSONObject params;
+    private static final ThreadLocal<JSONObject> THREAD_LOCAL_PARAMS = ThreadLocal.withInitial(JSONObject::new);
 
     /**
      * 构建请求体
@@ -54,8 +54,16 @@ public abstract class TuShareDataComponent<T> {
      */
     protected abstract List<T> convertItemToDataObject(String json);
 
-    public void setParams(JSONObject params) {
-        this.params = params;
+    public JSONObject getParams() {
+        return THREAD_LOCAL_PARAMS.get();
+    }
+
+    public void setParams(JSONObject newParams) {
+        THREAD_LOCAL_PARAMS.set(newParams);
+    }
+
+    public void clearParams() {
+        THREAD_LOCAL_PARAMS.remove();
     }
 
     public final boolean fetchAndSaveData(String operation) {
@@ -65,7 +73,8 @@ public abstract class TuShareDataComponent<T> {
         stopWatch.stop();
 
         if (responseBody == null) {
-            return true;
+            log.error("响应内容为空");
+            return false;
         }
 
         stopWatch.start("解析数据");
@@ -73,7 +82,8 @@ public abstract class TuShareDataComponent<T> {
         stopWatch.stop();
 
         if (CollUtil.isEmpty(dataList)) {
-            return true;
+            log.error("没有解析出来数据");
+            return false;
         }
 
         stopWatch.start("保存数据");
@@ -86,7 +96,7 @@ public abstract class TuShareDataComponent<T> {
     private String sendRequest() {
         try {
             JSONObject jsonBody = createBasicRequestBody();
-            jsonBody.set("params", params);
+            jsonBody.set("params", getParams());
             jsonBody.set("token", TOKEN);
 
             HttpResponse httpResponse = HttpRequest.post(UrlConstant.PRO_URL)
@@ -105,6 +115,8 @@ public abstract class TuShareDataComponent<T> {
             String errorMsg = "An exception occurred while sending request";
             log.error(errorMsg, e);
             throw new ServiceException(errorMsg, e);
+        } finally {
+            clearParams();
         }
     }
 

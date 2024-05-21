@@ -14,7 +14,7 @@ public class HelloSchedule {
     @Resource
     private HelloScheduleService helloScheduleService;
 
-    @Scheduled(cron = "0 55 0 ? * *")
+    @Scheduled(cron = "0 24 13 ? * *")
     public void updateTradeInfo() {
         helloScheduleService.updateTradeInfo();
     }

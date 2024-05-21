@@ -2,6 +2,7 @@ package com.wangguangwu.datatushare.util;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 
 /**
  * @author wangguangwu
@@ -27,6 +28,16 @@ public final class DateFormatUtil {
     public static String formatYYYYMMDD(int daysAgo) {
         LocalDate date = LocalDate.now().minusDays(daysAgo);
         return date.format(YYYYMMDD_FORMATTER);
+    }
+
+    /**
+     * 返回当前月的第一天，格式化为YYYYMMDD。
+     *
+     * @return 格式化后的日期字符串
+     */
+    public static String getFirstDayOfCurrentMonth() {
+        LocalDate firstDayOfMonth = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
+        return firstDayOfMonth.format(YYYYMMDD_FORMATTER);
     }
 
     public static void main(String[] args) {

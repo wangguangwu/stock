@@ -23,7 +23,7 @@ public class StockOperationComponent {
     public Set<String> getTsCodeList() {
         LambdaQueryWrapper<StockBasicInfoDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StockBasicInfoDO::getIsDeleted, false)
-                .select(StockBasicInfoDO::getName);
+                .select(StockBasicInfoDO::getTsCode);
         return stockBasicInfoService.list(queryWrapper)
                 .stream()
                 .map(StockBasicInfoDO::getTsCode)
