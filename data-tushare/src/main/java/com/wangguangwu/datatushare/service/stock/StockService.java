@@ -6,10 +6,10 @@ package com.wangguangwu.datatushare.service.stock;
 public interface StockService {
 
     /**
-     * 基础信息
-     * <p>
-     * <a href="https://tushare.pro/document/2?doc_id=25">...</a>
+     * 根据股票代码更新股票数据
+     *
+     * @return 操作是否成功
      */
-    void stockBasicItem();
+    Boolean stockBasicItem();
 
 }

@@ -19,10 +19,10 @@ public class StockServiceImpl implements StockService {
     private StockBasicComponent stockBasicHandleComponent;
 
     @Override
-    public void stockBasicItem() {
+    public Boolean stockBasicItem() {
         JSONObject params = new JSONObject();
         params.set("list_status", "L");
         stockBasicHandleComponent.setParams(params);
-        stockBasicHandleComponent.fetchAndSaveData("股市基本数据");
+        return stockBasicHandleComponent.fetchAndSaveData("股市基本数据");
     }
 }
