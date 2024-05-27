@@ -5,7 +5,8 @@ import com.wangguangwu.datatushare.component.TuShareDataComponent;
 import com.wangguangwu.datatushare.constant.QueryFieldsConstant;
 import com.wangguangwu.datatushare.dto.StockInfo;
 import com.wangguangwu.datatushare.entity.StockBasicInfoDO;
-import com.wangguangwu.datatushare.service.basic.StockBasicInfoService;
+import com.wangguangwu.datatushare.service.basic.impl.GenericSaveOrUpdateService;
+import com.wangguangwu.datatushare.service.stock.impl.StockBasicInfoSaveOrUpdateServiceImpl;
 import com.wangguangwu.datatushare.util.ConvertUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,9 @@ import java.util.List;
 public class StockBasicComponent extends TuShareDataComponent<StockBasicInfoDO> {
 
     @Resource
-    private StockBasicInfoService stockBasicInfoService;
+    private GenericSaveOrUpdateService genericSaveOrUpdateService;
+    @Resource
+    private StockBasicInfoSaveOrUpdateServiceImpl stockBasicInfoSaveOrUpdateService;
 
     @Override
     protected JSONObject createBasicRequestBody() {
@@ -35,7 +38,7 @@ public class StockBasicComponent extends TuShareDataComponent<StockBasicInfoDO> 
 
     @Override
     protected boolean saveOrUpdateBatch(List<StockBasicInfoDO> list) {
-        return stockBasicInfoService.saveOrUpdateBatch(list);
+        return genericSaveOrUpdateService.saveOrUpdate(list, stockBasicInfoSaveOrUpdateService);
     }
 
     @Override
